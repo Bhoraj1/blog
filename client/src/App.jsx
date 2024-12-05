@@ -7,10 +7,12 @@ import SingUP from "./pages/SingUP";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import NotFound from "./pages/NotFound";
+import Header from './components/Header';
 
 export default function App() {
   return (
     <BrowserRouter>
+     <Header />
       <Routes>
         <Route>
           <Route path="/" element={<Home />} />
