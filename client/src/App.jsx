@@ -8,6 +8,7 @@ import Projects from "./pages/Projects";
 import NotFound from "./pages/NotFound";
 import Header from './components/Header';
 import SingUP from "./pages/SingUp";
+import FooterComponent from "./components/Footer";
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
+      <FooterComponent/>
     </BrowserRouter>
   );
 }
