@@ -14,7 +14,7 @@ const persistConfig = {
   version: 1,
 };
 
-// 3. Wrap the rootReducer with persistReducer to enable persistence
+// 3.Wrap the rootReducer with persistReducer to enable persistence
 const persistedReucer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
