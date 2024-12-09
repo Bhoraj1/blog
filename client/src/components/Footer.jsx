@@ -6,7 +6,7 @@ import { FaInstagram } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa";
 
-export default function FooterComponent() {
+export default function MainFooter() {
   return (
     <Footer container className="border border-t-8 border-teal-500">
       <div className="w-full max-w-7xl mx-auto">
