@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 import MainFooter from "./components/Footer";
 import SingUP from "./pages/SingUp";
+import PrivateRoute from "./components/PrivateRoute";
 
 export default function App() {
   return (
@@ -20,9 +21,10 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SingUP />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />{" "}
+          </Route>
           <Route path="/projects" element={<Projects />} />
-          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
       <MainFooter />
