@@ -8,13 +8,17 @@ export const test = (req, res) => {
 
 export const update = async (req, res, next) => {
   if (req.user.id !== req.params.userId) {
-    return res.status(403).json({ error: "You are not allowed to update this user" });
+    return res
+      .status(403)
+      .json({ error: "You are not allowed to update this user" });
   }
 
   // Password validation
   if (req.body.password) {
     if (req.body.password.length < 6) {
-      return next(errorHandler(400, "Password should be at least 6 characters long"));
+      return next(
+        errorHandler(400, "Password should be at least 6 characters long")
+      );
     }
     req.body.password = bcryptjs.hashSync(req.body.password, 10);
   }
@@ -23,7 +27,9 @@ export const update = async (req, res, next) => {
   if (req.body.username) {
     const { username } = req.body;
     if (username.length < 7 || username.length > 20) {
-      return next(errorHandler(400, "Username must be between 7 and 20 characters long"));
+      return next(
+        errorHandler(400, "Username must be between 7 and 20 characters long")
+      );
     }
     if (username.includes(" ")) {
       return next(errorHandler(400, "Username should not contain spaces"));
@@ -32,7 +38,9 @@ export const update = async (req, res, next) => {
       return next(errorHandler(400, "Username should be in lowercase"));
     }
     if (!username.match(/^[a-zA-Z0-9]+$/)) {
-      return next(errorHandler(400, "Username should only contain letters and numbers"));
+      return next(
+        errorHandler(400, "Username should only contain letters and numbers")
+      );
     }
   }
 
@@ -56,6 +64,20 @@ export const update = async (req, res, next) => {
 
     const { password, ...rest } = updatedUser._doc;
     return res.status(200).json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteUser = async (req, res, next) => {
+  if (req.user.id !== req.params.userId) {
+    return res
+      .status(403)
+      .json({ error: "You are not allowed to delete this user" });
+  }
+  try {
+    await User.findByIdAndDelete(req.params.userId);
+    res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     next(error);
   }
