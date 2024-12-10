@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { TextInput, Button, Alert, Modal } from "flowbite-react";
 import { useRef, useState, useEffect } from "react";
+import {Link} from 'react-router-dom'
 import {
   updateFailure,
   updateStart,
@@ -14,7 +15,7 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useDispatch } from "react-redux";
 
 export default function DashProfile() {
-  const { currentUser, error } = useSelector((state) => state.user);
+  const { currentUser, error,loading } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [formData, setFormData] = useState({});
@@ -148,9 +149,18 @@ export default function DashProfile() {
           placeholder="**********"
           onChange={handleChange}
         />
-        <Button type="submit" gradientDuoTone="tealToLime" outline>
-          Update Profile
+        <Button type="submit" gradientDuoTone="tealToLime" outline disabled={loading}>
+     {loading ? 'Loading...':'Update'}
         </Button>
+        {
+          currentUser.isAdmin &&(
+            <Link to ='/create-post'>
+            <Button type="button" gradientDuoTone="purpleToPink" className="w-full">
+              Create a Post
+            </Button>
+            </Link>
+          )
+        }
       </form>
       <div className="flex justify-between text-red-500 mt-5">
         <span onClick={() => setShowModel(true)} className="cursor-pointer">
