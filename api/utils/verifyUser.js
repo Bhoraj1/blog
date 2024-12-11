@@ -7,7 +7,7 @@ export const verifyToken = async (req, res, next) => {
   if (!token) {
     return next(errorHandler(401, "No token provided"));
   }
-  console.log(process.env.JWT_SECRET);
+  // console.log(process.env.JWT_SECRET);
   verify(token, process.env.JWT_SECRET, (err, data) => {
     if (err) {
       return next(errorHandler(403, "Unauthorized"));
