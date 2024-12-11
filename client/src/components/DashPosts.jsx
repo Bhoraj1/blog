@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 export default function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
   const [userPosts, setUserPosts] = useState([]);
+  const [showMore, setShowMore] = useState(true);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -18,6 +19,9 @@ export default function DashPosts() {
           console.error(data.message || "Failed to fetch posts.");
         } else {
           setUserPosts(data.posts);
+          if (data.posts.length < 9) {
+            setShowMore(false);
+          }
         }
       } catch (error) {
         console.error("Error fetching posts:", error);
@@ -28,6 +32,24 @@ export default function DashPosts() {
       fetchPosts();
     }
   }, [currentUser._id]);
+
+  const handleShowMore = async () => {
+    const startIndex = userPosts.length;
+    try {
+      const res = await fetch(
+        `/api/post/getposts?userId=${currentUser._id}&startIndex${startIndex}`
+      );
+      const data = await res.json();
+      if (res.ok) {
+        setUserPosts((prev) => [...prev, ...data.posts]);
+        if (data.posts.length >= 9) {
+          setShowMore(false);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500  ">
@@ -41,21 +63,34 @@ export default function DashPosts() {
             <Table.HeadCell>
               <span>Edit</span>
             </Table.HeadCell>
-          </Table.Head>  
+          </Table.Head>
           <Table.Body className="divide-y">
             {userPosts.map((post) => (
-              <Table.Row key={post._id} className="bg-white dark:border-gray-700 dark:bg-gray-800 ">
+              <Table.Row
+                key={post._id}
+                className="bg-white dark:border-gray-700 dark:bg-gray-800 "
+              >
                 <TableCell>{new Date(post.updatedAt).toDateString()}</TableCell>
                 {/* <TableCell>{post.image}</TableCell> */}
                 <TableCell>
-                  <Link className="font-medium text-gray-950 dark:text-white" to={`/post/${post.slug}`}>{post.title}</Link>
+                  <Link
+                    className="font-medium text-gray-950 dark:text-white"
+                    to={`/post/${post.slug}`}
+                  >
+                    {post.title}
+                  </Link>
                 </TableCell>
                 <TableCell>{post.category}</TableCell>
                 <TableCell>
-                  <span className="font-medium text-red-400 hover:underline cursor-pointer">Delete</span>
+                  <span className="font-medium text-red-400 hover:underline cursor-pointer">
+                    Delete
+                  </span>
                 </TableCell>
                 <TableCell>
-                  <Link className="text-teal-500 hover:underline" to={`/update-post/${post._id}`}>
+                  <Link
+                    className="text-teal-500 hover:underline"
+                    to={`/update-post/${post._id}`}
+                  >
                     <span>Edit</span>
                   </Link>
                 </TableCell>
@@ -65,6 +100,14 @@ export default function DashPosts() {
         </Table>
       ) : (
         <p>There are no posts yet!</p>
+      )}
+      {showMore && (
+        <button
+          onClick={handleShowMore}
+          className="w-full text-teal-500 self-center text-sm py-7"
+        >
+          Show More
+        </button>
       )}
     </div>
   );
